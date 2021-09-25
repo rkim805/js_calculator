@@ -45,6 +45,9 @@ function roundPrecision(num) {
     //parse back to float, toFixed is called on a Number
     return Number.parseFloat(numString).toFixed(4);
   }
+  else {
+    return num;
+  }
 }
 
 function operate (operator, op1, op2) {
