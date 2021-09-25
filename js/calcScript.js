@@ -113,21 +113,27 @@ function addOperatorListeners() {
       //if there are enough operands to do a calculation when operator
       //is pressed
       if(opTracking.lastBtnPressed == "num" && opTracking.operation != "") {
-        let result = operate(opTracking.operation, opTracking.displayValue,
-          numDisplay.textContent);
-        numDisplay.textContent = result;
-        calcDisplay.textContent = `${result} ${opButton.textContent}`;
-        opTracking.displayValue = result;
+        if(opTracking.operation === "÷" && numDisplay.textContent === "0") {
+          alert("Nice try, no cataclysm for you today.");
+        }
+        else {
+          let result = operate(opTracking.operation, opTracking.displayValue,
+            numDisplay.textContent);
+          numDisplay.textContent = result;
+          calcDisplay.textContent = `${result} ${opButton.textContent}`;
+          opTracking.displayValue = result;
+          opTracking.lastBtnPressed = "op";
+          opTracking.operation = opButton.textContent;
+        }
       }
       else {
         //store value of first operand
         opTracking.displayValue = numDisplay.textContent;
         calcDisplay.textContent = `${opTracking.displayValue} 
         ${opButton.textContent}`;
+        opTracking.lastBtnPressed = "op";
+        opTracking.operation = opButton.textContent;
       }
-
-      opTracking.lastBtnPressed = "op";
-      opTracking.operation = opButton.textContent;
     });
   });
 }
@@ -146,29 +152,34 @@ function addEqualListener() {
   let calcDisplay = document.querySelector("#calc-display");
   let numDisplay = document.querySelector("#result-display");
   equalButton.addEventListener("click", () => {
-    let result = operate(opTracking.operation, opTracking.displayValue, 
-      numDisplay.textContent);
-
-    //undefined at start when no operations entered
-    if(result == undefined) {
-      calcDisplay.textContent = `${numDisplay.textContent} =`
+    if(opTracking.operation === "÷" && numDisplay.textContent === "0") {
+      alert("Nice try, no cataclysm for you today.");
     }
-    //if last operation was equal, use previous result in display for
-    //calculation with prior result/operator and saved operand.
     else {
-      if(opTracking.lastBtnPressed === "eq") {
-        calcDisplay.textContent = `${numDisplay.textContent} 
-        ${opTracking.operation} ${opTracking.displayValue} = `
-        //console.log(`display Value: ${opTracking.displayValue}`);
+      let result = operate(opTracking.operation, opTracking.displayValue, 
+        numDisplay.textContent);
+
+      //undefined at start when no operations entered
+      if(result == undefined) {
+        calcDisplay.textContent = `${numDisplay.textContent} =`
       }
-      //add second operator and equals sign to calculation display
+      //if last operation was equal, use previous result in display for
+      //calculation with prior result/operator and saved operand.
       else {
-        calcDisplay.textContent += ` ${numDisplay.textContent} =`;
-        opTracking.displayValue = numDisplay.textContent;
+        if(opTracking.lastBtnPressed === "eq") {
+          calcDisplay.textContent = `${numDisplay.textContent} 
+          ${opTracking.operation} ${opTracking.displayValue} = `
+          //console.log(`display Value: ${opTracking.displayValue}`);
+        }
+        //add second operator and equals sign to calculation display
+        else {
+          calcDisplay.textContent += ` ${numDisplay.textContent} =`;
+          opTracking.displayValue = numDisplay.textContent;
+        }
+        numDisplay.textContent = result;
       }
-      numDisplay.textContent = result;
+      opTracking.lastBtnPressed = "eq";
     }
-    opTracking.lastBtnPressed = "eq";
   });
 }
 
