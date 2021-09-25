@@ -8,6 +8,7 @@ window.onload = function() {
   addNumberListeners();
   addOperatorListeners();
   addEqualListener();
+  addClearListener();
 }
 
 function add(op1, op2) {
@@ -103,11 +104,22 @@ function addOperatorListeners() {
   let numDisplay = document.querySelector("#result-display");
   opButtons.forEach((opButton) => {
     opButton.addEventListener("click", () => {
-      //store value of first operand
-      opTracking.displayValue = numDisplay.textContent;
+      //if there are enough operands to do a calculation when operator
+      //is pressed
+      if(opTracking.lastBtnPressed = "num" && opTracking.operation !== "=") {
+        let result = operate(opTracking.operation, opTracking.displayValue,
+          numDisplay.textContent);
+        numDisplay.textContent = result;
+        calcDisplay.textContent = `${result} ${opButton.textContent}`;
+        opTracking.displayValue = result;
+      }
+      else {
+        //store value of first operand
+        opTracking.displayValue = numDisplay.textContent;
+        calcDisplay.textContent = `${opTracking.displayValue} 
+        ${opButton.textContent}`;
+      }
 
-      calcDisplay.textContent = `${opTracking.displayValue} 
-      ${opButton.textContent}`;
       opTracking.lastBtnPressed = "op";
       opTracking.operation = opButton.textContent;
     });
@@ -135,5 +147,21 @@ function addEqualListener() {
     calcDisplay.textContent += ` ${numDisplay.textContent} =`;
     numDisplay.textContent = result;
     opTracking.lastBtnPressed = "eq";
+    opTracking.operation = "=";
   });
+}
+
+function addClearListener() {
+  let clearButton = document.querySelector("#clear-button");
+  let calcDisplay = document.querySelector("#calc-display");
+  let numDisplay = document.querySelector("#result-display")
+  clearButton.addEventListener("click", () => {
+    opTracking = {
+      displayValue: 0,
+      operation: "=",
+      lastBtnPressed: "op"
+    };
+    calcDisplay.textContent = "";
+    numDisplay.textContent = 0;
+  })
 }
