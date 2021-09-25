@@ -1,6 +1,6 @@
 let opTracking = {
   displayValue: 0,
-  operation: "=",
+  operation: "",
   lastBtnPressed: "op"
 };
 
@@ -83,13 +83,16 @@ function addNumberListeners() {
 
   numButtons.forEach((numButton) => {
     numButton.addEventListener("click", () => {
-      if(opTracking.lastBtnPressed === "op") {
-        numDisplay.textContent = numButton.textContent;
+      //don't add 0's to display if it already shows 0
+      if(numButton.textContent !== "0" || numDisplay.textContent !== "0") {
+        if(opTracking.lastBtnPressed === "op") {
+          numDisplay.textContent = numButton.textContent;
+        }
+        else {
+          numDisplay.textContent += numButton.textContent;
+        }
+        opTracking.lastBtnPressed = "number";
       }
-      else {
-        numDisplay.textContent += numButton.textContent;
-      }
-      opTracking.lastBtnPressed = "number";
     });
   });  
 }
@@ -146,11 +149,25 @@ function addEqualListener() {
     let result = operate(opTracking.operation, opTracking.displayValue, 
       numDisplay.textContent);
 
-    //add second operator and equals sign to calculation display
-    calcDisplay.textContent += ` ${numDisplay.textContent} =`;
-    numDisplay.textContent = result;
+    //undefined at start of calculator when either no calculated result
+    //or saved operator
+    if(result == undefined) {
+      calcDisplay.textContent = `${numDisplay.textContent} =`
+    }
+    //if last operation was equal, use previous result in display for
+    //calculation with prior result/operator and saved operand.
+    else {
+      if(opTracking.lastBtnPressed === "eq") {
+        calcDisplay.textContent = `${numDisplay.textContent} 
+        ${opTracking.operation} ${opTracking.displayValue} = `
+      }
+      //add second operator and equals sign to calculation display
+      else {
+        calcDisplay.textContent += ` ${numDisplay.textContent} =`;
+      }
+      numDisplay.textContent = result;
+    }
     opTracking.lastBtnPressed = "eq";
-    opTracking.operation = "=";
   });
 }
 
