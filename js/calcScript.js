@@ -85,13 +85,13 @@ function addNumberListeners() {
     numButton.addEventListener("click", () => {
       //don't add 0's to display if it already shows 0
       if(numButton.textContent !== "0" || numDisplay.textContent !== "0") {
-        if(opTracking.lastBtnPressed === "op") {
+        if(opTracking.lastBtnPressed != "num") {
           numDisplay.textContent = numButton.textContent;
         }
         else {
           numDisplay.textContent += numButton.textContent;
         }
-        opTracking.lastBtnPressed = "number";
+        opTracking.lastBtnPressed = "num";
       }
     });
   });  
@@ -112,7 +112,7 @@ function addOperatorListeners() {
     opButton.addEventListener("click", () => {
       //if there are enough operands to do a calculation when operator
       //is pressed
-      if(opTracking.lastBtnPressed = "num" && opTracking.operation !== "=") {
+      if(opTracking.lastBtnPressed == "num" && opTracking.operation != "") {
         let result = operate(opTracking.operation, opTracking.displayValue,
           numDisplay.textContent);
         numDisplay.textContent = result;
@@ -144,13 +144,12 @@ function addOperatorListeners() {
 function addEqualListener() {
   let equalButton = document.querySelector("#equal-button");
   let calcDisplay = document.querySelector("#calc-display");
-  let numDisplay = document.querySelector("#result-display")
+  let numDisplay = document.querySelector("#result-display");
   equalButton.addEventListener("click", () => {
     let result = operate(opTracking.operation, opTracking.displayValue, 
       numDisplay.textContent);
 
-    //undefined at start of calculator when either no calculated result
-    //or saved operator
+    //undefined at start when no operations entered
     if(result == undefined) {
       calcDisplay.textContent = `${numDisplay.textContent} =`
     }
@@ -160,10 +159,12 @@ function addEqualListener() {
       if(opTracking.lastBtnPressed === "eq") {
         calcDisplay.textContent = `${numDisplay.textContent} 
         ${opTracking.operation} ${opTracking.displayValue} = `
+        //console.log(`display Value: ${opTracking.displayValue}`);
       }
       //add second operator and equals sign to calculation display
       else {
         calcDisplay.textContent += ` ${numDisplay.textContent} =`;
+        opTracking.displayValue = numDisplay.textContent;
       }
       numDisplay.textContent = result;
     }
@@ -178,7 +179,7 @@ function addClearListener() {
   clearButton.addEventListener("click", () => {
     opTracking = {
       displayValue: 0,
-      operation: "=",
+      operation: "",
       lastBtnPressed: "op"
     };
     calcDisplay.textContent = "";
