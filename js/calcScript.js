@@ -85,7 +85,8 @@ function addNumberListeners() {
     numButton.addEventListener("click", () => {
       //don't add 0's to display if it already shows 0
       if(numButton.textContent !== "0" || numDisplay.textContent !== "0") {
-        if(opTracking.lastBtnPressed != "num") {
+        if(opTracking.lastBtnPressed != "num" || 
+          (opTracking.operation === "÷" && numDisplay.textContent === "0")) {
           numDisplay.textContent = numButton.textContent;
         }
         else {
