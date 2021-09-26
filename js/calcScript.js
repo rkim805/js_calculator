@@ -9,6 +9,7 @@ window.onload = function() {
   addOperatorListeners();
   addEqualListener();
   addClearListener();
+  addDecimalListener();
 }
 
 function add(op1, op2) {
@@ -120,24 +121,54 @@ function addOperatorListeners() {
         else {
           let result = operate(opTracking.operation, opTracking.displayValue,
             numDisplay.textContent);
-          numDisplay.textContent = result;
-          calcDisplay.textContent = `${result} ${opButton.textContent}`;
-          opTracking.displayValue = result;
-          opTracking.lastBtnPressed = "op";
-          opTracking.operation = opButton.textContent;
+
+          displayResultAfterOp(opButton, calcDisplay, numDisplay, result);
         }
       }
       else {
-        //store value of first operand
-        opTracking.displayValue = numDisplay.textContent;
-        calcDisplay.textContent = `${opTracking.displayValue} 
-        ${opButton.textContent}`;
-        opTracking.lastBtnPressed = "op";
-        opTracking.operation = opButton.textContent;
+       updateDisplayNoResult(opButton, calcDisplay, numDisplay);
       }
     });
   });
 }
+
+/**
+ * displayResultAfterOp -- Helper function to update the display of the 
+ * calculator when a result should be obtained after an operation button is
+ * pressed.
+ * 
+ * @param {DOMelement} opButton -- Button of operator that was pressed
+ * @param {DOMelement} calcDisplay -- Portion of display that shows calculation
+ * @param {DOMelement} numDispaly -- Portion of display that shows second
+ *                                   operand or result
+ */
+function displayResultAfterOp(opButton, calcDisplay, numDisplay, result) {
+  numDisplay.textContent = result;
+  calcDisplay.textContent = `${result} ${opButton.textContent}`;
+  opTracking.displayValue = result;
+  opTracking.lastBtnPressed = "op";
+  opTracking.operation = opButton.textContent;
+}
+
+/**
+ * updateDisplayNoResult -- Helper function to update the display of the
+ * calculator after an operation button is pressed, but no calculation is
+ * performed
+ * 
+ * @param {DOMelement} opButton -- Button of operator that was pressed
+ * @param {DOMelement} calcDisplay -- Portion of display that shows calculation
+ * @param {DOMelement} numDispaly -- Portion of display that shows second
+ *                                   operand or result
+ */
+function updateDisplayNoResult(opButton, calcDisplay, numDisplay) {
+  opTracking.displayValue = numDisplay.textContent;
+  calcDisplay.textContent = `${opTracking.displayValue} 
+  ${opButton.textContent}`;
+  opTracking.lastBtnPressed = "op";
+  opTracking.operation = opButton.textContent;
+}
+
+
 
 /**
  * addEqualListener()
@@ -196,5 +227,15 @@ function addClearListener() {
     };
     calcDisplay.textContent = "";
     numDisplay.textContent = 0;
+  })
+}
+
+function addDecimalListener() {
+  let numDisplay = document.querySelector("#result-display");
+  let decimalButton = document.querySelector("#decimal-button");
+  decimalButton.addEventListener("click", () => {
+    if(!numDisplay.textContent.includes(".")) {
+      numDisplay.textContent += ".";
+    }
   })
 }
