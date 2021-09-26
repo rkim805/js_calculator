@@ -240,9 +240,13 @@ function addDecimalListener() {
   let numDisplay = document.querySelector("#result-display");
   let decimalButton = document.querySelector("#decimal-button");
   decimalButton.addEventListener("click", () => {
-    if(!numDisplay.textContent.includes(".")) {
-      numDisplay.textContent += ".";
-      opTracking.lastBtnPressed = "num";
+    if(opTracking.lastBtnPressed === "op" || 
+        opTracking.lastBtnPressed === "eq") {
+      numDisplay.textContent = "0.";
     }
+    else if(!numDisplay.textContent.includes(".")) {
+      numDisplay.textContent += ".";
+    }
+    opTracking.lastBtnPressed = "num";
   })
 }
