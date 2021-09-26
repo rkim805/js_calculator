@@ -43,13 +43,14 @@ function roundPrecision(num) {
   }
   let precision = numString.split(".")[1].length;
   if(precision > 4) {
-    //parse back to float, toFixed is called on a Number
-    return Number.parseFloat(numString).toFixed(4);
+    //outer parseFloat to remove insignificant trailing zeroes
+    return parseFloat(parseFloat(numString).toFixed(4));
   }
   else {
     return num;
   }
 }
+
 
 function operate (operator, op1, op2) {
   switch(operator) {
@@ -112,6 +113,9 @@ function addOperatorListeners() {
   let numDisplay = document.querySelector("#result-display");
   opButtons.forEach((opButton) => {
     opButton.addEventListener("click", () => {
+      //remove trailing zeros from operand if they exist
+      numDisplay.textContent = parseFloat(numDisplay.textContent);
+
       //if there are enough operands to do a calculation when operator
       //is pressed
       if(opTracking.lastBtnPressed == "num" && opTracking.operation != "") {
@@ -191,6 +195,9 @@ function addEqualListener() {
       let result = operate(opTracking.operation, opTracking.displayValue, 
         numDisplay.textContent);
 
+      //remove trailing zeros from input if they exist
+      numDisplay.textContent = parseFloat(numDisplay.textContent);
+
       //undefined at start when no operations entered
       if(result == undefined) {
         calcDisplay.textContent = `${numDisplay.textContent} =`
@@ -201,7 +208,6 @@ function addEqualListener() {
         if(opTracking.lastBtnPressed === "eq") {
           calcDisplay.textContent = `${numDisplay.textContent} 
           ${opTracking.operation} ${opTracking.displayValue} = `
-          //console.log(`display Value: ${opTracking.displayValue}`);
         }
         //add second operator and equals sign to calculation display
         else {
@@ -236,6 +242,7 @@ function addDecimalListener() {
   decimalButton.addEventListener("click", () => {
     if(!numDisplay.textContent.includes(".")) {
       numDisplay.textContent += ".";
+      opTracking.lastBtnPressed = "num";
     }
   })
 }
