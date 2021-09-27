@@ -112,6 +112,7 @@ function init () {
   }
   
   function handleOpInput() {
+    let calcDisplay = document.querySelector("#calc-display");
     let numDisplay = document.querySelector("#result-display");
     let opInput = this.textContent;
 
@@ -128,54 +129,21 @@ function init () {
          let result = operate(opTracking.operation, opTracking.displayValue,
            numDisplay.textContent);
 
-         displayResultAfterOp(opInput, result);
+          numDisplay.textContent = result;
+          calcDisplay.textContent = `${result} ${opInput}`;
+          opTracking.displayValue = result;
+          opTracking.lastBtnPressed = "op";
+          opTracking.operation = opInput;
        }
      }
      else {
-      updateDisplayNoResult(opInput);
+      opTracking.displayValue = numDisplay.textContent;
+      calcDisplay.textContent = `${opTracking.displayValue} ${opInput}`;
+      opTracking.lastBtnPressed = "op";
+      opTracking.operation = opInput;
      }
   }
-  
-  /**
-   * displayResultAfterOp -- Helper function to update the display of the 
-   * calculator when a result should be obtained after an operation button is
-   * pressed.
-   * 
-   * @param {DOMelement} opButton -- Button of operator that was pressed
-   * @param {DOMelement} calcDisplay -- Portion of display that shows calculation
-   * @param {DOMelement} numDispaly -- Portion of display that shows second
-   *                                   operand or result
-   */
-  function displayResultAfterOp(opInput, result) {
-    let calcDisplay = document.querySelector("#calc-display");
-    let numDisplay = document.querySelector("#result-display");
-
-    numDisplay.textContent = result;
-    calcDisplay.textContent = `${result} ${opInput}`;
-    opTracking.displayValue = result;
-    opTracking.lastBtnPressed = "op";
-    opTracking.operation = opInput;
-  }
-  /**
-   * updateDisplayNoResult -- Helper function to update the display of the
-   * calculator after an operation button is pressed, but no calculation is
-   * performed
-   * 
-   * @param {DOMelement} opButton -- Button of operator that was pressed
-   * @param {DOMelement} calcDisplay -- Portion of display that shows calculation
-   * @param {DOMelement} numDispaly -- Portion of display that shows second
-   *                                   operand or result
-   */
-  function updateDisplayNoResult(opInput) {
-    let calcDisplay = document.querySelector("#calc-display");
-    let numDisplay = document.querySelector("#result-display");
-
-    opTracking.displayValue = numDisplay.textContent;
-    calcDisplay.textContent = `${opTracking.displayValue} 
-    ${opInput}`;
-    opTracking.lastBtnPressed = "op";
-    opTracking.operation = opInput;
-  }
+ 
 
 
   /**
