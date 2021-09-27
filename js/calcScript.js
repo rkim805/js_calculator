@@ -3,12 +3,21 @@ window.onload = function() {
 }
 
 function init () {
+  let opTracking = {
+    displayValue: 0,
+    operation: "",
+    lastBtnPressed: "op"
+  };
+
+  const MAX_PRECISION = 4;
+
   const opButtons = document.querySelectorAll(".op-button");
   const numButtons = document.querySelectorAll(".number-button");
   const equalButton = document.querySelector("#equal-button");
   const decimalButton = document.querySelector("#decimal-button");
   const clearButton = document.querySelector("#clear-button");
   const deleteButton = document.querySelector("#delete-button");
+  const signButton = document.querySelector("#sign-button");
 
   
   numButtons.forEach((numButton) => {
@@ -21,45 +30,40 @@ function init () {
   decimalButton.addEventListener("click", handleDecimalInput);
   deleteButton.addEventListener("click", handleDelete);
   clearButton.addEventListener("click", handleClear);
+  signButton.addEventListener("click", handleSignInput);
   
-
-  let opTracking = {
-    displayValue: 0,
-    operation: "",
-    lastBtnPressed: "op"
-  };
   
   function add(op1, op2) {
     op1 = Number(op1);
     op2 = Number(op2);
-    return roundPrecision(op1 + op2);
+    return roundPrecision(op1 + op2, MAX_PRECISION);
   }
   
   function subtract(op1, op2) {
-    return roundPrecision(op1 - op2);
+    return roundPrecision(op1 - op2), MAX_PRECISION;
   }
   
   function multiply(op1, op2) {
-    return roundPrecision(op1 * op2);
+    return roundPrecision(op1 * op2, MAX_PRECISION);
   }
   
   function divide(op1, op2) {
-    return roundPrecision(op1/op2);
+    return roundPrecision(op1/op2, MAX_PRECISION);
   }
   
   /**
    * roundPrecision
    * @param {number} num 
-   * @returns num, unchanged if precision is <= 4 decimal places.
-   *               changed to exactly precision of 4 if > 4 decimal places.
+   * @returns num, unchanged if precision is <=precision decimal places.
+   *               changed to precision if >precision decimal places.
    */
-  function roundPrecision(num) {
-    let numString = num + "";
+  function roundPrecision(num, precision) {
+    const numString = num + "";
     if(!numString.includes(".")) {
       return num;
     }
-    let precision = numString.split(".")[1].length;
-    if(precision > 4) {
+    const precisionOfNum = numString.split(".")[1].length;
+    if(precisionOfNum > precision) {
       //outer parseFloat to remove insignificant trailing zeroes
       return parseFloat(parseFloat(numString).toFixed(4));
     }
@@ -242,6 +246,18 @@ function init () {
     else {
       numDisplay.textContent = 
         numDisplay.textContent.slice(0, numDisplay.textContent.length - 1);
+    }
+  }
+
+  function handleSignInput() {
+    let numDisplay = document.querySelector("#result-display");
+    if(numDisplay.textContent !== "0") {
+      if(numDisplay.textContent.charAt(0) === "-") {
+        numDisplay.textContent = numDisplay.textContent.slice(1);
+      }
+      else {
+        numDisplay.textContent = `-${numDisplay.textContent}`;
+      }
     }
   }
 }
