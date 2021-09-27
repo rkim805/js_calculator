@@ -3,12 +3,12 @@ window.onload = function() {
 }
 
 function init () {
-  let opButtons = document.querySelectorAll(".op-button");
-  let numButtons = document.querySelectorAll(".number-button");
-  let equalButton = document.querySelector("#equal-button");
-  let decimalButton = document.querySelector("#decimal-button");
-  let clearButton = document.querySelector("#clear-button");
-  let deleteButton = document.querySelector("#delete-button");
+  const opButtons = document.querySelectorAll(".op-button");
+  const numButtons = document.querySelectorAll(".number-button");
+  const equalButton = document.querySelector("#equal-button");
+  const decimalButton = document.querySelector("#decimal-button");
+  const clearButton = document.querySelector("#clear-button");
+  const deleteButton = document.querySelector("#delete-button");
 
   
   numButtons.forEach((numButton) => {
@@ -156,7 +156,6 @@ function init () {
     opTracking.lastBtnPressed = "op";
     opTracking.operation = opInput;
   }
-  
   /**
    * updateDisplayNoResult -- Helper function to update the display of the
    * calculator after an operation button is pressed, but no calculation is
@@ -195,8 +194,8 @@ function init () {
       alert("Nice try, no cataclysm for you today.");
     }
     else {
-      let result = operate(opTracking.operation, opTracking.displayValue, 
-        numDisplay.textContent);
+      let result = operate(opTracking.operation, numDisplay.textContent, 
+        opTracking.displayValue);
 
       //remove trailing zeros from input if they exist
       numDisplay.textContent = parseFloat(numDisplay.textContent);
