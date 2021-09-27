@@ -266,20 +266,26 @@ function init () {
   
   function handleDelete() {
     let numDisplay = document.querySelector("#result-display");
-    if(opTracking.lastBtnPressed === "num" || 
-        opTracking.lastBtnPressed === "del") {
-      if(numDisplay.textContent.length === 1) {
-        numDisplay.textContent = "0";
-      }
-      else {
-        numDisplay.textContent = 
-          numDisplay.textContent.slice(0, numDisplay.textContent.length - 1);
-      }
+    if(opTracking.lastBtnPressed === "num") {
+      deleteDigit();
     }
     else if(opTracking.lastBtnPressed === "eq") {
       let calcDisplay = document.querySelector("#calc-display");
       calcDisplay.textContent = "";
     }
-    opTracking.lastBtnPressed = "del";
   }
+
+function deleteDigit() {
+  let numDisplay = document.querySelector("#result-display");
+  if(numDisplay.textContent.length === 1) {
+    numDisplay.textContent = "0";
+
+    //last button pressed is undone due to delete
+    opTracking.lastBtnPressed = "op";
+  }
+  else {
+    numDisplay.textContent = 
+      numDisplay.textContent.slice(0, numDisplay.textContent.length - 1);
+  }
+}
 }
