@@ -10,7 +10,6 @@ function init() {
   };
 
   const MAX_PRECISION = 4;
-
   const opButtons = document.querySelectorAll(".op-button");
   const numButtons = document.querySelectorAll(".number-button");
   const equalButton = document.querySelector("#equal-button");
@@ -93,7 +92,7 @@ function init() {
   /**
    * handleNumberInput()
    * Handler for number buttons that will update the results
-   * display. Affects the result display, in order to show:
+   * display. Updates with:
    * 
    * -- value of the first operand if no operator has
    *    been entered.
@@ -104,8 +103,8 @@ function init() {
    * opTracking object if an operator button is presed.
    */
   function handleNumberInput(event) {
-    let numDisplay = document.querySelector("#result-display");
-    let inputNum = getInputValue(event, this.textContent);
+    const numDisplay = document.querySelector("#result-display");
+    const inputNum = getInputValue(event, this.textContent);
     if (inputNum !== "0" || numDisplay.textContent !== "0") {
       if (opTracking.lastBtnPressed != "num" ||
         (opTracking.operation === "÷" && numDisplay.textContent === "0")) {
@@ -117,6 +116,7 @@ function init() {
       opTracking.lastBtnPressed = "num";
     }
   }
+  
   /**
    * HandleOpInput()
    * Handler for operation buttons that will result the calculation display
@@ -124,9 +124,9 @@ function init() {
    * chained.
    */
   function handleOpInput(event) {
-    let calcDisplay = document.querySelector("#calc-display");
-    let numDisplay = document.querySelector("#result-display");
-    let opInput = getInputValue(event, this.textContent);
+    const calcDisplay = document.querySelector("#calc-display");
+    const numDisplay = document.querySelector("#result-display");
+    const opInput = getInputValue(event, this.textContent);
 
     //remove trailing zeros from operand if they exist
     numDisplay.textContent = parseFloat(numDisplay.textContent);
@@ -166,8 +166,8 @@ function init() {
    * pressed being repeated on the new result.
    */
   function handleEqualInput() {
-    let calcDisplay = document.querySelector("#calc-display");
-    let numDisplay = document.querySelector("#result-display");
+    const calcDisplay = document.querySelector("#calc-display");
+    const numDisplay = document.querySelector("#result-display");
     if (opTracking.operation === "÷" && numDisplay.textContent === "0") {
       alert("Nice try, no cataclysm for you today.");
     }
@@ -194,8 +194,8 @@ function init() {
   }
 
   function displayResultAfterEq(result) {
-    let calcDisplay = document.querySelector("#calc-display");
-    let numDisplay = document.querySelector("#result-display");
+    const calcDisplay = document.querySelector("#calc-display");
+    const numDisplay = document.querySelector("#result-display");
     if (opTracking.lastBtnPressed === "eq") {
       calcDisplay.textContent = `${numDisplay.textContent} 
       ${opTracking.operation} ${opTracking.savedOperand} = `
@@ -210,7 +210,7 @@ function init() {
 
 
   function handleDecimalInput() {
-    let numDisplay = document.querySelector("#result-display");
+    const numDisplay = document.querySelector("#result-display");
     if (opTracking.lastBtnPressed === "op" ||
       opTracking.lastBtnPressed === "eq") {
       numDisplay.textContent = "0.";
@@ -223,8 +223,8 @@ function init() {
 
 
   function handleClear() {
-    let calcDisplay = document.querySelector("#calc-display");
-    let numDisplay = document.querySelector("#result-display");
+    const calcDisplay = document.querySelector("#calc-display");
+    const numDisplay = document.querySelector("#result-display");
     opTracking = {
       displayValue: 0,
       operation: "",
@@ -240,13 +240,13 @@ function init() {
       deleteDigit();
     }
     else if (opTracking.lastBtnPressed === "eq") {
-      let calcDisplay = document.querySelector("#calc-display");
+      const calcDisplay = document.querySelector("#calc-display");
       calcDisplay.textContent = "";
     }
   }
 
   function deleteDigit() {
-    let numDisplay = document.querySelector("#result-display");
+    const numDisplay = document.querySelector("#result-display");
     if (numDisplay.textContent.length === 1) {
       numDisplay.textContent = "0";
 
@@ -260,7 +260,7 @@ function init() {
   }
 
   function handleSignInput() {
-    let numDisplay = document.querySelector("#result-display");
+    const numDisplay = document.querySelector("#result-display");
     if (numDisplay.textContent !== "0") {
       if (numDisplay.textContent.charAt(0) === "-") {
         numDisplay.textContent = numDisplay.textContent.slice(1);
@@ -281,13 +281,13 @@ function init() {
   }
 
   function parseKeyInput(event) {
-    let keyPressed = event.key;
-    const numRegex = /[0-9]/;
-    const opRegex = /[+\-*/]/;
-    if (numRegex.test(keyPressed)) {
+    const keyPressed = event.key;
+    const NUM_REGEX = /[0-9]/;
+    const OP_REGEX = /[+\-*/]/;
+    if (NUM_REGEX.test(keyPressed)) {
       handleNumberInput(event);
     }
-    else if (opRegex.test(keyPressed)) {
+    else if (OP_REGEX.test(keyPressed)) {
       handleOpInput(event);
     }
     else if (keyPressed === ".") {
