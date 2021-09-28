@@ -40,7 +40,7 @@ function init () {
   }
   
   function subtract(op1, op2) {
-    return roundPrecision(op1 - op2), MAX_PRECISION;
+    return roundPrecision(op1 - op2, MAX_PRECISION);
   }
   
   function multiply(op1, op2) {
