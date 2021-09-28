@@ -34,6 +34,7 @@ function init () {
   
   
   function add(op1, op2) {
+    //prevent string concatenation
     op1 = Number(op1);
     op2 = Number(op2);
     return roundPrecision(op1 + op2, MAX_PRECISION);
@@ -166,8 +167,8 @@ function init () {
       alert("Nice try, no cataclysm for you today.");
     }
     else {
-      let result = operate(opTracking.operation, numDisplay.textContent, 
-        opTracking.displayValue);
+      let result = operate(opTracking.operation,opTracking.displayValue, 
+        numDisplay.textContent);
 
       //remove trailing zeros from input if they exist
       numDisplay.textContent = parseFloat(numDisplay.textContent);
