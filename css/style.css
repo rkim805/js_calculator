@@ -1,6 +1,13 @@
 html, body {
   height: 100%;
   background-color: #142f44;
+  --btn-red: #faa;
+  --btn-red-hover: #e99;
+  --btn-red-press: #d88;
+
+  --btn-blue: #aaf;
+  --btn-blue-hover: #99e;
+  --btn-blue-press: #88d;
 }
 
 #wrapper {
@@ -41,7 +48,8 @@ html, body {
   border-width: 4px;
   border-radius: 10px;
   padding: 50px;
-  background-color: rgb(70, 71, 73);
+  background-color: rgb(107, 107, 107);
+  box-shadow: 5px 10px;
 }
 
 #buttons {
@@ -55,11 +63,20 @@ html, body {
 }
 
 #equal-button, .op-button {
-  background-color: rgb(121, 232, 247);
+  background-color: var(--btn-blue);
 }
 
-#sign-button, .erase-button {
-  background-color: rgb(255, 126, 126);
+#equal-button:hover, .op-button:hover {
+  background-color: var(--btn-blue-hover);
+} 
+
+.red-button {
+  background-color: var(--btn-red);
+  transition-duration: 0.1s;
+}
+
+.red-button:hover {
+  background-color: var(--btn-red-hover);
 }
 
 button {
@@ -69,4 +86,12 @@ button {
   border-radius: 5px;
   font-size: 24px;
   background-color: #a2bbcf;
+}
+
+button:hover {
+  background-color: #8ca8c0;
+}
+
+button:active {
+  transform:translateY(3px);
 }
