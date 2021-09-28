@@ -115,7 +115,12 @@ function init () {
       opTracking.lastBtnPressed = "num";
     }
   }
-  
+  /**
+   * HandleOpInput()
+   * Handler for operation buttons that will result the calculation display
+   * with the operation input, and the result display if operations are
+   * chained.
+   */
   function handleOpInput() {
     let calcDisplay = document.querySelector("#calc-display");
     let numDisplay = document.querySelector("#result-display");
