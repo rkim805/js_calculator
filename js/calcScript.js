@@ -1,10 +1,10 @@
-window.onload = function() {
+window.onload = function () {
   init();
 }
 
-function init () {
+function init() {
   let opTracking = {
-    displayValue: 0,
+    savedOperand: 0,
     operation: "",
     lastBtnPressed: "op"
   };
@@ -19,9 +19,9 @@ function init () {
   const deleteButton = document.querySelector("#delete-button");
   const signButton = document.querySelector("#sign-button");
 
-  
+
   numButtons.forEach((numButton) => {
-    numButton.addEventListener("click", handleNumberInput);  
+    numButton.addEventListener("click", handleNumberInput);
   });
   opButtons.forEach((opButton) => {
     opButton.addEventListener("click", handleOpInput);
@@ -31,27 +31,29 @@ function init () {
   deleteButton.addEventListener("click", handleDelete);
   clearButton.addEventListener("click", handleClear);
   signButton.addEventListener("click", handleSignInput);
-  
-  
+
+  document.addEventListener("keydown", parseKeyInput);
+
+
   function add(op1, op2) {
     //prevent string concatenation
     op1 = Number(op1);
     op2 = Number(op2);
     return roundPrecision(op1 + op2, MAX_PRECISION);
   }
-  
+
   function subtract(op1, op2) {
     return roundPrecision(op1 - op2, MAX_PRECISION);
   }
-  
+
   function multiply(op1, op2) {
     return roundPrecision(op1 * op2, MAX_PRECISION);
   }
-  
+
   function divide(op1, op2) {
-    return roundPrecision(op1/op2, MAX_PRECISION);
+    return roundPrecision(op1 / op2, MAX_PRECISION);
   }
-  
+
   /**
    * roundPrecision
    * @param {number} num 
@@ -60,11 +62,11 @@ function init () {
    */
   function roundPrecision(num, precision) {
     const numString = num + "";
-    if(!numString.includes(".")) {
+    if (!numString.includes(".")) {
       return num;
     }
     const precisionOfNum = numString.split(".")[1].length;
-    if(precisionOfNum > precision) {
+    if (precisionOfNum > precision) {
       //outer parseFloat to remove insignificant trailing zeroes
       return parseFloat(parseFloat(numString).toFixed(4));
     }
@@ -72,22 +74,22 @@ function init () {
       return num;
     }
   }
-  
-  
-  function operate (operator, op1, op2) {
-    switch(operator) {
+
+
+  function operate(operator, op1, op2) {
+    switch (operator) {
       case "+":
         return add(op1, op2);
       case "-":
         return subtract(op1, op2);
       case "*":
         return multiply(op1, op2);
-      case "÷": 
+      case "÷":
         return divide(op1, op2);
     }
   }
-  
-  
+
+
   /**
    * handleNumberInput()
    * Handler for number buttons that will update the results
@@ -101,11 +103,11 @@ function init () {
    * Value of the first operand is stored in the global
    * opTracking object if an operator button is presed.
    */
-  function handleNumberInput() {
-    let inputNum = this.textContent;
+  function handleNumberInput(event) {
     let numDisplay = document.querySelector("#result-display");
-    if(inputNum !== "0" || numDisplay.textContent !== "0") {
-      if(opTracking.lastBtnPressed != "num" || 
+    let inputNum = getInputValue(event, this.textContent);
+    if (inputNum !== "0" || numDisplay.textContent !== "0") {
+      if (opTracking.lastBtnPressed != "num" ||
         (opTracking.operation === "÷" && numDisplay.textContent === "0")) {
         numDisplay.textContent = inputNum;
       }
@@ -121,39 +123,38 @@ function init () {
    * with the operation input, and the result display if operations are
    * chained.
    */
-  function handleOpInput() {
+  function handleOpInput(event) {
     let calcDisplay = document.querySelector("#calc-display");
     let numDisplay = document.querySelector("#result-display");
-    let opInput = this.textContent;
+    let opInput = getInputValue(event, this.textContent);
 
-     //remove trailing zeros from operand if they exist
-     numDisplay.textContent = parseFloat(numDisplay.textContent);
-  
-     //if there are enough operands to do a calculation when operator
-     //is pressed
-     if(opTracking.lastBtnPressed == "num" && opTracking.operation != "") {
-       if(opTracking.operation === "÷" && numDisplay.textContent === "0") {
-         alert("Nice try, no cataclysm for you today.");
-       }
-       else {
-         let result = operate(opTracking.operation, opTracking.displayValue,
-           numDisplay.textContent);
+    //remove trailing zeros from operand if they exist
+    numDisplay.textContent = parseFloat(numDisplay.textContent);
 
-          numDisplay.textContent = result;
-          calcDisplay.textContent = `${result} ${opInput}`;
-          opTracking.displayValue = result;
-          opTracking.lastBtnPressed = "op";
-          opTracking.operation = opInput;
-       }
-     }
-     else {
-      opTracking.displayValue = numDisplay.textContent;
-      calcDisplay.textContent = `${opTracking.displayValue} ${opInput}`;
+    //if there are enough operands to do a calculation when operator
+    //is pressed
+    if (opTracking.lastBtnPressed == "num" && opTracking.operation != "") {
+      if (opTracking.operation === "÷" && numDisplay.textContent === "0") {
+        alert("Nice try, no cataclysm for you today.");
+      }
+      else {
+        let result = operate(opTracking.operation, opTracking.savedOperand,
+          numDisplay.textContent);
+
+        numDisplay.textContent = result;
+        calcDisplay.textContent = `${result} ${opInput}`;
+        opTracking.savedOperand = result;
+        opTracking.lastBtnPressed = "op";
+        opTracking.operation = opInput;
+      }
+    }
+    else {
+      opTracking.savedOperand = numDisplay.textContent;
+      calcDisplay.textContent = `${opTracking.savedOperand} ${opInput}`;
       opTracking.lastBtnPressed = "op";
       opTracking.operation = opInput;
-     }
+    }
   }
- 
 
 
   /**
@@ -162,44 +163,47 @@ function init () {
    * calculation, and the results display with the result.
    * 
    * Pressing Equals repeatedly intentionally results in the last operation
-   * pressed being repeated on the previous first operand and the result of
-   * the last calculation.
+   * pressed being repeated on the new result.
    */
   function handleEqualInput() {
     let calcDisplay = document.querySelector("#calc-display");
     let numDisplay = document.querySelector("#result-display");
-    if(opTracking.operation === "÷" && numDisplay.textContent === "0") {
+    if (opTracking.operation === "÷" && numDisplay.textContent === "0") {
       alert("Nice try, no cataclysm for you today.");
     }
     else {
-      let result = operate(opTracking.operation,opTracking.displayValue, 
-        numDisplay.textContent);
-
-      //remove trailing zeros from input if they exist
-      numDisplay.textContent = parseFloat(numDisplay.textContent);
-
+      let result;
+      //saved operand is second only if operator/eq are chained
+      if (opTracking.lastBtnPressed === "eq") {
+        result = operate(opTracking.operation, numDisplay.textContent,
+          opTracking.savedOperand);
+      }
+      else {
+        result = operate(opTracking.operation, opTracking.savedOperand,
+          numDisplay.textContent);
+      }
       //undefined at start when no operations entered
-      if(result == undefined) {
+      if (result == undefined) {
         calcDisplay.textContent = `${numDisplay.textContent} =`
       }
-      //if last operation was equal, use previous result in display for
-      //calculation with prior result/operator and saved operand.
       else {
-        displayResultAfterEq(result, calcDisplay, numDisplay)
+        displayResultAfterEq(result);
       }
       opTracking.lastBtnPressed = "eq";
     }
   }
-  
-  function displayResultAfterEq(result, calcDisplay, numDisplay) {
-    if(opTracking.lastBtnPressed === "eq") {
+
+  function displayResultAfterEq(result) {
+    let calcDisplay = document.querySelector("#calc-display");
+    let numDisplay = document.querySelector("#result-display");
+    if (opTracking.lastBtnPressed === "eq") {
       calcDisplay.textContent = `${numDisplay.textContent} 
-      ${opTracking.operation} ${opTracking.displayValue} = `
+      ${opTracking.operation} ${opTracking.savedOperand} = `
     }
-    //add second operator and equals sign to calculation display
+    //add second operand and equal sign to calculation display
     else {
       calcDisplay.textContent += ` ${numDisplay.textContent} =`;
-      opTracking.displayValue = numDisplay.textContent;
+      opTracking.savedOperand = numDisplay.textContent;
     }
     numDisplay.textContent = result;
   }
@@ -207,11 +211,11 @@ function init () {
 
   function handleDecimalInput() {
     let numDisplay = document.querySelector("#result-display");
-    if(opTracking.lastBtnPressed === "op" || 
+    if (opTracking.lastBtnPressed === "op" ||
       opTracking.lastBtnPressed === "eq") {
       numDisplay.textContent = "0.";
     }
-    else if(!numDisplay.textContent.includes(".")) {
+    else if (!numDisplay.textContent.includes(".")) {
       numDisplay.textContent += ".";
     }
     opTracking.lastBtnPressed = "num";
@@ -230,12 +234,12 @@ function init () {
     numDisplay.textContent = 0;
   }
 
-  
+
   function handleDelete() {
-    if(opTracking.lastBtnPressed === "num") {
+    if (opTracking.lastBtnPressed === "num") {
       deleteDigit();
     }
-    else if(opTracking.lastBtnPressed === "eq") {
+    else if (opTracking.lastBtnPressed === "eq") {
       let calcDisplay = document.querySelector("#calc-display");
       calcDisplay.textContent = "";
     }
@@ -243,27 +247,57 @@ function init () {
 
   function deleteDigit() {
     let numDisplay = document.querySelector("#result-display");
-    if(numDisplay.textContent.length === 1) {
+    if (numDisplay.textContent.length === 1) {
       numDisplay.textContent = "0";
 
       //last button pressed is undone due to delete
       opTracking.lastBtnPressed = "op";
     }
     else {
-      numDisplay.textContent = 
+      numDisplay.textContent =
         numDisplay.textContent.slice(0, numDisplay.textContent.length - 1);
     }
   }
 
   function handleSignInput() {
     let numDisplay = document.querySelector("#result-display");
-    if(numDisplay.textContent !== "0") {
-      if(numDisplay.textContent.charAt(0) === "-") {
+    if (numDisplay.textContent !== "0") {
+      if (numDisplay.textContent.charAt(0) === "-") {
         numDisplay.textContent = numDisplay.textContent.slice(1);
       }
       else {
         numDisplay.textContent = `-${numDisplay.textContent}`;
       }
+    }
+  }
+
+  function getInputValue(event, altInput) {
+    if (event.key !== undefined) {
+      return event.key;
+    }
+    else {
+      return altInput;
+    }
+  }
+
+  function parseKeyInput(event) {
+    let keyPressed = event.key;
+    const numRegex = /[0-9]/;
+    const opRegex = /[+\-*/]/;
+    if (numRegex.test(keyPressed)) {
+      handleNumberInput(event);
+    }
+    else if (opRegex.test(keyPressed)) {
+      handleOpInput(event);
+    }
+    else if (keyPressed === ".") {
+      handleDecimalInput();
+    }
+    else if (keyPressed === "Enter") {
+      handleEqualInput();
+    }
+    else if (keyPressed === "Backspace") {
+      handleDelete();
     }
   }
 }
