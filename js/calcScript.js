@@ -111,7 +111,6 @@ function init() {
       //if user already performed a calculation
       if(opTracking.lastBtnPressed === "eq" && 
       calcDisplay.textContent.match(OP_REGEX) !== null) {
-        console.log("test");
         calcDisplay.textContent = "";
         numDisplay.textContent = inputNum;
       }
@@ -183,7 +182,7 @@ function init() {
     numDisplay.textContent = parseFloat(numDisplay.textContent);
 
     if (opTracking.operation === "÷" && 
-        parseFloat(numDisplay.textContent) === 0) {
+        numDisplay.textContent === 0) {
       alert("Nice try, no cataclysm for you today.");
     }
     else {
