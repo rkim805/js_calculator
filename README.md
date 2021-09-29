@@ -9,7 +9,7 @@ is given in the standard Windows calculator application.
 
 This includes the equals sign as an operator that can be chained.
 
-![Display of 75/6](/img/basicCalc.png)
+![Display of 75/6](/img/basicCalc1.png)
 
 The display after hitting -, using the previous result as the
 first operand for the next calculation:
