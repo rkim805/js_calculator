@@ -98,25 +98,35 @@ function init() {
    *    been entered.
    * 
    * -- value of the second operand if an operator has been entered.
-   * 
-   * Value of the first operand is stored in the global
-   * opTracking object if an operator button is presed.
+   *
    */
   function handleNumberInput(event) {
+    const calcDisplay = document.querySelector("#calc-display");
     const numDisplay = document.querySelector("#result-display");
     const inputNum = getInputValue(event, this.textContent);
+    const OP_REGEX = /[+\-*/]/;
+
+    // if the input won't add leading zeroes
     if (inputNum !== "0" || numDisplay.textContent !== "0") {
-      if (opTracking.lastBtnPressed != "num" ||
-        (opTracking.operation === "÷" && numDisplay.textContent === "0")) {
+      //if user already performed a calculation
+      if(opTracking.lastBtnPressed === "eq" && 
+      calcDisplay.textContent.match(OP_REGEX) !== null) {
+        console.log("test");
+        calcDisplay.textContent = "";
+        numDisplay.textContent = inputNum;
+      }
+      else if (opTracking.lastBtnPressed != "num" ||
+        (opTracking.operation === "÷" && 
+        numDisplay.textContent === "0")) {
         numDisplay.textContent = inputNum;
       }
       else {
         numDisplay.textContent += inputNum;
       }
-      opTracking.lastBtnPressed = "num";
     }
+    opTracking.lastBtnPressed = "num";
   }
-  
+
   /**
    * HandleOpInput()
    * Handler for operation buttons that will result the calculation display
@@ -168,16 +178,22 @@ function init() {
   function handleEqualInput() {
     const calcDisplay = document.querySelector("#calc-display");
     const numDisplay = document.querySelector("#result-display");
-    if (opTracking.operation === "÷" && numDisplay.textContent === "0") {
+
+    //remove trailing decimals from display if they exist
+    numDisplay.textContent = parseFloat(numDisplay.textContent);
+
+    if (opTracking.operation === "÷" && 
+        parseFloat(numDisplay.textContent) === 0) {
       alert("Nice try, no cataclysm for you today.");
     }
     else {
       let result;
-      //saved operand is second only if operator/eq are chained
+      //saved operand is second only if eq/op chained
       if (opTracking.lastBtnPressed === "eq") {
         result = operate(opTracking.operation, numDisplay.textContent,
           opTracking.savedOperand);
       }
+      //else saved operand is first operand
       else {
         result = operate(opTracking.operation, opTracking.savedOperand,
           numDisplay.textContent);
@@ -196,6 +212,7 @@ function init() {
   function displayResultAfterEq(result) {
     const calcDisplay = document.querySelector("#calc-display");
     const numDisplay = document.querySelector("#result-display");
+
     if (opTracking.lastBtnPressed === "eq") {
       calcDisplay.textContent = `${numDisplay.textContent} 
       ${opTracking.operation} ${opTracking.savedOperand} = `
@@ -293,7 +310,7 @@ function init() {
     else if (keyPressed === ".") {
       handleDecimalInput();
     }
-    else if (keyPressed === "Enter") {
+    else if (keyPressed === "Enter" || keyPressed === "=") {
       handleEqualInput();
     }
     else if (keyPressed === "Backspace") {
