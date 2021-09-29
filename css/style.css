@@ -2,6 +2,7 @@
 
 html, body {
   height: 100%;
+  box-sizing: border-box;
   background-color: #142f44;
   --btn-red: #faa;
   --btn-red-hover: #e99;
@@ -23,9 +24,9 @@ html, body {
   text-align: right;
   background-color: #d9e8f5;
   border-radius: 10px;
-  margin-bottom: 20px;
   overflow: hidden;
   font-family: "Space Mono", monospace;
+  margin-bottom: 20px;
 }
 
 #calc-display {
@@ -39,17 +40,15 @@ html, body {
 
 #result-display {
   font-size: 48px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   margin-right: 20px;
   word-wrap: break-word;
   max-width: 100%;
 }
 
 #calculator {
-  display: grid;
   min-height: 500px;
   width: 400px;
-  grid-template-rows: 25% 75%;
   border-style: solid;
   border-width: 4px;
   border-radius: 10px;
