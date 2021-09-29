@@ -83,6 +83,7 @@ function init() {
         return subtract(op1, op2);
       case "*":
         return multiply(op1, op2);
+      case "/":
       case "÷":
         return divide(op1, op2);
     }
@@ -113,6 +114,7 @@ function init() {
       calcDisplay.textContent.match(OP_REGEX) !== null) {
         calcDisplay.textContent = "";
         numDisplay.textContent = inputNum;
+        opTracking.savedOperand = 0;
       }
       else if (opTracking.lastBtnPressed != "num" ||
         (opTracking.operation === "÷" && 
