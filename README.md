@@ -11,7 +11,7 @@ This includes the equals sign as an operator that can be chained.
 
 ![Display of 75/6](/img/basicCalc1.png)
 
-The display after hitting -, using the previous result as the
+The display after hitting /, using the previous result as the
 first operand for the next calculation:
 
 ![Chained Calculation](/img/basicCalc2.png)
