@@ -279,10 +279,22 @@ function init() {
       //last button pressed is undone due to delete
       opTracking.lastBtnPressed = "op";
     }
+    else if (numDisplay.textContent.length === 2 && 
+              numDisplay.textContent.includes("-")) {
+                numDisplay.textContent.slice(0, 
+                  numDisplay.textContent.length - 1);
+
+                numDisplay.textContent = 0;
+                opTracking.lastBtnPressed = "op";
+              }
     else {
       numDisplay.textContent =
         numDisplay.textContent.slice(0, numDisplay.textContent.length - 1);
-        if(numDisplay.textContent === "0") {
+        if(numDisplay.textContent === "-0") {
+          opTracking.lastBtnPressed = "op";
+          numDisplay.textContent = 0;
+        }
+        else if(numDisplay.textContent === "0") {
           opTracking.lastBtnPressed = "op";
         }
     }
