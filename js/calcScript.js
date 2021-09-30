@@ -282,6 +282,9 @@ function init() {
     else {
       numDisplay.textContent =
         numDisplay.textContent.slice(0, numDisplay.textContent.length - 1);
+        if(numDisplay.textContent === "0") {
+          opTracking.lastBtnPressed = "op";
+        }
     }
   }
 
