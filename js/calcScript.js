@@ -115,7 +115,6 @@ function init() {
       calcDisplay.textContent.match(OP_REGEX) !== null) {
         calcDisplay.textContent = "";
         numDisplay.textContent = inputNum;
-        //opTracking.savedOperand = 0;
       }
       else if (opTracking.lastBtnPressed != "num" ||
         (opTracking.operation === "÷" && 
@@ -145,7 +144,7 @@ function init() {
 
     //if there are enough operands to do a calculation when operator
     //is pressed
-    if (opTracking.lastBtnPressed == "num" && opTracking.operation != "") {
+    if (opTracking.lastBtnPressed === "num" && calcDisplay.textContent !== "") {
       if (opTracking.operation === "÷" && numDisplay.textContent === "0") {
         alert("Nice try, no cataclysm for you today.");
       }
