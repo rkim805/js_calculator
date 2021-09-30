@@ -6,7 +6,8 @@ function init() {
   let opTracking = {
     savedOperand: 0,
     operation: "",
-    lastBtnPressed: "op"
+    lastBtnPressed: "op",
+    erasedCalc: ""
   };
 
   const MAX_PRECISION = 4;
@@ -114,7 +115,7 @@ function init() {
       calcDisplay.textContent.match(OP_REGEX) !== null) {
         calcDisplay.textContent = "";
         numDisplay.textContent = inputNum;
-        opTracking.savedOperand = 0;
+        //opTracking.savedOperand = 0;
       }
       else if (opTracking.lastBtnPressed != "num" ||
         (opTracking.operation === "÷" && 
@@ -214,7 +215,8 @@ function init() {
     const calcDisplay = document.querySelector("#calc-display");
     const numDisplay = document.querySelector("#result-display");
 
-    if (opTracking.lastBtnPressed === "eq") {
+    if (opTracking.lastBtnPressed === "eq" || 
+        calcDisplay.textContent === "") {
       calcDisplay.textContent = `${numDisplay.textContent} 
       ${opTracking.operation} ${opTracking.savedOperand} = `
     }
