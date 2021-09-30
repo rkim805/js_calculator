@@ -7,7 +7,6 @@ function init() {
     savedOperand: 0,
     operation: "",
     lastBtnPressed: "op",
-    erasedCalc: ""
   };
 
   const MAX_PRECISION = 4;
@@ -230,7 +229,15 @@ function init() {
 
   function handleDecimalInput() {
     const numDisplay = document.querySelector("#result-display");
-    if (opTracking.lastBtnPressed === "op" ||
+    const calcDisplay = document.querySelector("#calc-display");
+    const OP_REGEX = /[+\-*/]/;
+
+    if(opTracking.lastBtnPressed === "eq" && 
+    calcDisplay.textContent.match(OP_REGEX) !== null) {
+      calcDisplay.textContent = "";
+      numDisplay.textContent = "0.";
+    }
+    else if (opTracking.lastBtnPressed === "op" ||
       opTracking.lastBtnPressed === "eq") {
       numDisplay.textContent = "0.";
     }
